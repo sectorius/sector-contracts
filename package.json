@@ -1,0 +1,29 @@
+{
+  "name": "sector",
+  "version": "1.0.0",
+  "description": "Sector smart contracts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sectorius/sector-contracts.git"
+  },
+  "author": "Sectorius",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.0",
+    "@openzeppelin/test-helpers": "^0.5.13",
+    "@truffle/hdwallet-provider": "^1.0.37",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "truffle-plugin-verify": "^0.5.12"
+  },
+  "bugs": {
+    "url": "https://github.com/sectorius/sector-contracts/issues"
+  },
+  "homepage": "https://github.com/sectorius/sector-contracts#readme"
+}

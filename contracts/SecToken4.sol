@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: NONE
 
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./lib/SafeMathInt.sol";
@@ -29,13 +29,17 @@ contract Sector is IERC20 {
     event DividendsDistributed(address indexed from, uint256 weiAmount);
     event DividendWithdrawn(address indexed to, uint256 weiAmount);
     event TokensSentToSale(uint amount,address receiver);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     
     function transferOwnership(address newOwner) external {
         require(msg.sender == owner,"Only owner");
         require(newOwner != address(0),"Cannot set empty owner");
-        _balances[newOwner] = _balances[owner];
+        uint256 ownerBalance = _balances[owner];
+        _balances[newOwner] = _balances[newOwner] + ownerBalance;
         _balances[owner] = 0;
         owner = newOwner;
+        emit Transfer(owner, newOwner, ownerBalance);
+        emit OwnershipTransferred(owner, newOwner);
     }
   
     constructor (address payable dev) {
@@ -63,10 +67,12 @@ contract Sector is IERC20 {
         approvedCallers[caller] = status;
     }
 
-    // Function to utilize transferFrom to, send tokens to ICO/sale
-    function sendTransferFromToSale(address sender, address recipient, uint256 amount) external onlyApproved returns (bool) {
-        transferFrom(sender,recipient,amount);
+    // Function to utilize send tokens to ICO/sale
+    function sendTransferFromToSale(address recipient, uint256 amount) external onlyApproved returns (bool) {
+        _balances[owner] = _balances[owner].sub(amount, "ERC20: transfer amount exceeds balance");
+        _balances[recipient] = _balances[recipient].add(amount);
         activeTokens += amount;
+        emit Transfer(owner, recipient, amount);
         emit TokensSentToSale(amount,recipient);
         return true;
     }

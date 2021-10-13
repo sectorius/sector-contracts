@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity 0.8.6;
+pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
@@ -97,7 +97,7 @@ contract SECICO {
 
         // Basis points (BP) 100=1%.
         uint256 Dev =  userSent.mul(3000).div(10000);
-        uint256 Invest = userSent.mul(7000).div(10000);
+        uint256 Invest = userSent.sub(Dev);
         development.transfer(Dev);
         investment.transfer(Invest);
 
@@ -270,6 +270,7 @@ contract SECICO {
     }
 
     function retrieveAnyERC20(address _tokenAddress, address _to, uint _amount) public onlyOwner {
+        require(_tokenAddress != address(sector),"Can't withdraw native token");
         IERC20(_tokenAddress).transfer(_to, _amount);
     }
 

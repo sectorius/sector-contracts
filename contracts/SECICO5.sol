@@ -136,7 +136,7 @@ contract SECICO {
         PhaseInfo storage phase = phaseInfo[phaseNow];
         require(phase.totalDeposit > 0,"ICO: TotalDeposit should be >= One");
         phase.allocToken = _allocToken;
-        phase.tokenPerWEI = phase.allocToken.div(phase.totalDeposit);
+        phase.tokenPerWEI = phase.allocToken.mul(1e18).div(phase.totalDeposit);
         state = 2;
         lastPhase = phaseNow;
         phaseNow++;
@@ -157,7 +157,7 @@ contract SECICO {
         for(uint i=0; i<=last; ++i) {
             UserInfo storage user = userInfo[i][msg.sender];
             PhaseInfo storage phase = phaseInfo[i];
-            uint256 reward = phase.tokenPerWEI.mul(user.amount);
+            uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
             user.amount = 0;     
             if (reward > 0) {
@@ -179,7 +179,7 @@ contract SECICO {
         for(uint i=0; i<=lastPhase; ++i) {
             UserInfo storage user = userInfo[i][msg.sender];
             PhaseInfo storage phase = phaseInfo[i];
-            uint256 reward = phase.tokenPerWEI.mul(user.amount);
+            uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
             if (reward > 0) {
                rewardSum = rewardSum.add(reward);
@@ -200,7 +200,7 @@ contract SECICO {
         for(uint i=0; i<=last; ++i) {
             UserInfo storage user = userInfo[i][_target];
             PhaseInfo storage phase = phaseInfo[i];
-            uint256 reward = phase.tokenPerWEI.mul(user.amount);
+            uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
             if (reward > 0) {
                rewardSum = rewardSum.add(reward);
@@ -220,7 +220,7 @@ contract SECICO {
         require(_phase <= lastPhase,"Phase:NOT::END");
         UserInfo storage user = userInfo[_phase][msg.sender];
         PhaseInfo storage phase = phaseInfo[_phase];
-        uint256 reward = phase.tokenPerWEI.mul(user.amount);
+        uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
         if (reward > 0) {
             require(sector.transfer(msg.sender, reward),"ERC20:FAILED");
@@ -238,7 +238,7 @@ contract SECICO {
         require(_phase <= lastPhase,"Phase:NOT::END");
         UserInfo storage user = userInfo[_phase][msg.sender];
         PhaseInfo storage phase = phaseInfo[_phase];
-        uint256 reward = phase.tokenPerWEI.mul(user.amount);
+        uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
         return reward;
     }
@@ -251,7 +251,7 @@ contract SECICO {
         require(_phase <= lastPhase,"Phase:NOT::END");
         UserInfo storage user = userInfo[_phase][_target];
         PhaseInfo storage phase = phaseInfo[_phase];
-        uint256 reward = phase.tokenPerWEI.mul(user.amount);
+        uint256 reward = phase.tokenPerWEI.mul(user.amount).div(1e18);
 
         return reward;
     }
